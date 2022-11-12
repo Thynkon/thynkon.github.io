@@ -25,7 +25,7 @@ and the ```baker``` is the ```AUR helper```.
 
 The following image should give you an idea of how an ```AUR helper``` works.
 
-![Build process of a .zst package](/assets/images/pkgbuild.svg){: .normal }
+![Build process of a .zst package](/assets/img/pkgbuild.svg){: .normal }
 
 ## What does the build process look like?
 
