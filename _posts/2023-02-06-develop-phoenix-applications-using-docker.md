@@ -7,17 +7,17 @@ tags: [elixir, phoenix, docker]
 
 ## Context
 
-For the last couple of months, I have been developing a few Elixir and Phoenix web applications. I have to admit I really enjoy Phoenix phylosophy.
+For the last couple of months, I have been developing a few Elixir and Phoenix web applications. I have to admit, I really enjoy Phoenix philosophy.
 For me, it offers the best Ruby on Rails features (quick development, code generators, etc...) but uses an explicit approach over the 'convention over configuration' ideology.
 
 But that's out of the scope of this post. I will write a post in the next days about how I fell in love with Elixir.
 
-So, back to the reason why I am writting this post. Recently, during a class about microservices,
+So, back to the reason why I am writing this post. Recently, during a class about microservices,
 I was asked to write a microservice using the language I loved the most.
 
-Without hesitating, I chose Elixir. This was an opportunity to improve my Elixir/Phoenix skills as I have never writtern a [JSON RESTfull API](https://restfulapi.net).
+Without hesitating, I chose Elixir. This was an opportunity to improve my Elixir/Phoenix skills as I have never written a [JSON RESTfull API](https://restfulapi.net).
 
-It was also an opportuniy to share a new programming paradigm with my colleagues as most of them have only written code in `PHP`, `Java` and `C#`.
+It was also an opportunity to share a new programming paradigm with my colleagues as most of them have only written code in `PHP`, `Java` and `C#`.
 
 This was my way to contribute to the amazing `Elixir community`.
 
@@ -29,13 +29,13 @@ You will also need to have [Docker](https://www.docker.com/) installed on your m
 
 ## Building the container
 
-During my class, I was asked to create two diffent images for the project: a `development` and a `production` one.
+During my class, I was asked to create two different images for the project: a `development` and a `production` one.
 
-Since most of tutorials/articles I found on the Internet only explained how to run `production-ready` applications on Docker containers, I had to create my own.
+Since most tutorials/articles I found on the Internet only explained how to run `production-ready` applications on Docker containers, I had to create my own.
 
 One of my requirements was to work on the project that was on the `host` without having to manually rebuild the container image. Thus, I had to use [bind volumes](https://docs.docker.com/storage/bind-mounts).
 
-In case you dont know, Phoenix provides generators that make `production deployments` easy. You can pass `--docker` to `mix phx.gen.release` to [generate a docker container image](https://hexdocs.pm/phoenix/releases.html#containers)
+In case you don't know, Phoenix provides generators that make `production deployments` easy. You can pass `--docker` to `mix phx.gen.release` to [generate a docker container image](https://hexdocs.pm/phoenix/releases.html#containers)
 
 Based on that file, I built the docker image you can find in the next section.
 
@@ -49,7 +49,7 @@ For a development environment, this is important as we do not have to manually r
 
 Some extra packages like `procps`, `iproute2` and `lsof` are installed for debug purposes only. During the process of creating the development image, I encountered a few network problems regarding one of the best Elixir's features: [remote sessions](https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html).
 
-In order to know what process where running on the container as well as what session token was being used, I had to use the [ps](https://man7.org/linux/man-pages/man1/ps.1.html) command combined with the only and only one [grep](https://man7.org/linux/man-pages/man1/grep.1.html).
+In order to know what process was running on the container as well as what session token was being used, I had to use the [ps](https://man7.org/linux/man-pages/man1/ps.1.html) command combined with the only and only one [grep](https://man7.org/linux/man-pages/man1/grep.1.html).
 
 **Dockerfile**
 
@@ -92,13 +92,13 @@ This `Dockerfile` exposes two ports:
 - `4000`: Phoenix web server
 - `4369`: [Erlang Port Mapper Daemon](https://www.erlang.org/doc/man/epmd.html), a program that allows to use `remote sessions`.
 
-**Note**: If you don't need to export the `4369` port in order to develop a web application in Phoenix using a container. It is a optional feature that can deeply increate your development experience.
+**Note**: If you don't need to export the `4369` port in order to develop a web application in Phoenix using a container. It is a optional feature that can deeply increase your development experience.
 
 If you have any experience working with Docker containers, you know that once you reach a certain level of complexity, building and running containers using the `docker` command can be painful.
 
 Hence, we will use [docker-compose](https://docs.docker.com/compose/reference). As I mentioned before, the `host` directory where your application is stored is mounted on the container using a `bind volume`.
 
-Also, a network is set so we can easily communicate with the container. Here, we set the ip address of the host to `172.40.0.1` and the container ip address to `172.40.0.2`.
+Also, a network is set so we can easily communicate with the container. Here, we set the IP address of the host to `172.40.0.1` and the container IP address to `172.40.0.2`.
 
 Feel free to change and adapt those values according to your needs.
 
@@ -139,7 +139,7 @@ This is a simple shell script that installs and compiles dependencies as well as
 
 But, the last command is the most important one. It starts a remote session on the container named `docker@172.40.0.2` with a cookie named `my_cookie`.
 
-The session's name is usually made up of the `hostname` and `ip address` of the remote machine. This allows us to identify/[list](https://hexdocs.pm/elixir/1.14.3/Node.html#list/0) remote nodes.
+The session's name is usually made up of the `hostname` and `IP address` of the remote machine. This allows us to identify/[list](https://hexdocs.pm/elixir/1.14.3/Node.html#list/0) remote nodes.
 
 Without the session cookie, you will not be able to connect to the remote session.
 
@@ -178,13 +178,13 @@ download and compile both the dependencies and the project code base. Since you 
 
 This happens because we are mounting the `hosts` directory to the docker container `/app/` directory.
 
-When I tried to run my CI/CD pipeline, most of the tasks failled due to missing permissions. Thus, I decided
-to run the docker image as an user other than `root`.
+When I tried to run my CI/CD pipeline, most of the tasks failed due to missing permissions. Thus, I decided
+to run the docker image as a user other than `root`.
 
-I knew that I wasn't the first person to have ever encounted this problem, so a quick research pointed me to this
+I knew that I wasn't the first person to have ever encountered this problem, so a quick research pointed me to this
 excellent answer by [BMitch on Stackoverflow](https://stackoverflow.com/questions/44683119/dockerfile-replicate-the-host-user-uid-and-gid-to-the-image/44683248#44683248).
 
-You can create an user for the docker image and set the `UID` and `GUID` of that user. If you are the only one using your
+You can create a user for the docker image and set the `UID` and `GUID` of that user. If you are the only one using your
 computer, chances are that your `UID` and `GUID` are both `1000`.
 
 In case you want to set `UID` and `GUID` to a value other than `1000` you can pass it as a build option to docker.
@@ -192,6 +192,7 @@ In case you want to set `UID` and `GUID` to a value other than `1000` you can pa
 Here are the final `Dockerfile` and `docker-compose.yml` files which allow you to run the docker container as a non-root user:
 
 **Dockerfile**
+
 ```docker
 ARG ELIXIR_VERSION=1.14.2
 ARG OTP_VERSION=25.1.2
@@ -239,6 +240,7 @@ EXPOSE 4000
 ```
 
 **docker-compose.yml**
+
 ```yml
 version: "3.3"
 services:
@@ -395,6 +397,7 @@ networks:
 You also need to change the following file in your `Phoenix application`:
 
 **env.sh.eex**
+
 ```elixir
 # # Set the release to work across nodes.
 # # RELEASE_DISTRIBUTION must be "sname" (local), "name" (distributed) or "none".
@@ -420,7 +423,7 @@ iex --name <YOUR_USERNAME>@<YOUR_IP_ADDRESS> --cookie <YOUR_COOKIE>
 Where:
 
 - `<YOUR_USERNAME>` is the user of the host
-- `<YOUR_IP_ADDRESS>` is the ip address of the gateway of the network created for the container. If we use the Dockerfile above as an example, it would be `172.40.0.1`.
+- `<YOUR_IP_ADDRESS>` is the IP address of the gateway of the network created for the container. If we use the Dockerfile above as an example, it would be `172.40.0.1`.
 - `<YOUR_COOKIE>` is the same cookie as the one defined in the `entrypoint.sh` file. In our case, it would be `my_cookie`.
 
 <video style="max-width: 730px;" src="https://user-images.githubusercontent.com/35641748/207707176-2dd2acad-15be-4d5c-94a0-8c6912b9ed16.mp4" controls="controls"></video>
